@@ -1,0 +1,108 @@
+﻿@page
+@model EmolyeePortal.Areas.Identity.Pages.SettingsModel
+@{
+    ViewData["Title"] = "Settings";
+}
+
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">⚙️ Account Settings</h5>
+                    <small class="text-light">@ViewData["Title"]</small>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+                    {
+                        <div class="alert alert-success">@Model.StatusMessage</div>
+                    }
+
+                    <form method="post" class="row g-3">
+                        <div class="col-md-12">
+                            <label asp-for="Input.UserName" class="form-label"></label>
+                            <input asp-for="Input.UserName" class="form-control" />
+                            <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label asp-for="Input.Email" class="form-label"></label>
+                            <input asp-for="Input.Email" class="form-control" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label asp-for="Input.PhoneNumber" class="form-label"></label>
+                            <input asp-for="Input.PhoneNumber" class="form-control" />
+                            <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-12 d-flex gap-2">
+                            <button type="submit" class="btn btn-success">Save changes</button>
+                            <a class="btn btn-outline-secondary" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Change password</a>
+                            <a class="btn btn-outline-primary" asp-area="" asp-controller="Employee" asp-action="List">View employees</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @if (Model.MyEmployees != null && Model.MyEmployees.Count > 0)
+            {
+                <div class="card mt-3 shadow-sm">
+                    <div class="card-header">
+                        <strong>Your Employee Record(s)</strong>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Designation</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var e in Model.MyEmployees)
+                                {
+                                    <tr>
+                                        <td>@e.FullName</td>
+                                        <td>@e.Email</td>
+                                        <td>@e.Department?.Name</td>
+                                        <td>@e.Designation?.Name</td>
+                                        <td class="text-end">
+                                            <a class="btn btn-sm btn-info" asp-controller="Employee" asp-action="Details" asp-route-id="@e.Id">Details</a>
+                                            <a class="btn btn-sm btn-warning" asp-controller="Employee" asp-action="Update" asp-route-id="@e.Id">Edit</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    Quick Info
+                </div>
+                <div class="card-body">
+                    <p class="mb-1"><strong>Signed in as:</strong> @User.Identity?.Name</p>
+                    <p class="mb-1"><strong>Manage:</strong></p>
+                    <ul>
+                        <li><a asp-area="Identity" asp-page="/Profile">Profile</a></li>
+                        <li><a asp-area="Identity" asp-page="/Settings">Settings</a></li>
+                        <li><a asp-area="Identity" asp-page="/Account/Logout">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
